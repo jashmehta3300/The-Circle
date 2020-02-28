@@ -1,5 +1,5 @@
 // @desc        register user
-// @route       POST api/v1/auth/register
+// @route       POST api/auth/register
 // @access      public
 exports.registerUser = (req, res, next) => {
     res.status(200).json({
@@ -8,7 +8,7 @@ exports.registerUser = (req, res, next) => {
 };
 
 // @desc        user login
-// @route       POST api/v1/auth/login
+// @route       POST api/auth/login
 // @access      public
 exports.loginUser = (req, res, next) => {
     res.status(200).json({
