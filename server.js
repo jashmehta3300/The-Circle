@@ -1,10 +1,19 @@
 const express = require('express');
 const dotenv = require('dotenv');
 
+//route files
+const auth = require('./routes/auth');
+
 //Load env variables
 dotenv.config({ path: './config/config.env' });
 
 const app = express();
+
+//Body parser
+app.use(express.json());
+
+//Mount routes
+app.use('/api/auth', auth);
 
 //Access env variable
 const PORT = process.env.PORT || 5000;
