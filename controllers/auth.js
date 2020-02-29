@@ -6,8 +6,8 @@ const User = require('../models/auth');
 exports.registerUser = async(req, res, next) => {
     const { name, mobileNo, aadharNo, password } = req.body;
 
-    const existingUser = User.find({
-        aadharNo: aadharNo
+    const existingUser = await User.findOne({
+        aadharNo
     });
 
     if (!existingUser) {
@@ -18,27 +18,53 @@ exports.registerUser = async(req, res, next) => {
             aadharNo,
             password
         });
+        res.status(200).json({
+            success: true,
+            data: user
+        });
     } else {
         res.status(401).json({
             success: false,
             reason: 'Aadhar Number is already registered'
         });
     }
-
-    res.status(200).json({
-        success: true,
-        data: user
-    });
 };
 
 // @desc        user login
 // @route       POST api/auth/login
 // @access      public
-exports.loginUser = (req, res, next) => {
-    const user = req.body;
+exports.loginUser = async(req, res, next) => {
+    const { name, password } = req.body;
+
+    // Validate emil & password
+    if (!name || !password) {
+        res.status(401).json({
+            success: false,
+            reason: 'False credentials'
+        });
+    }
+
+    // Check for user
+    const user = await User.findOne({ name }).select('+password');
+
+    if (!user) {
+        res.status(401).json({
+            success: false,
+            reason: 'False credentials'
+        });
+    }
+
+    // Check if password matches
+    const isMatch = await user.matchPassword(password);
+
+    if (!isMatch) {
+        res.status(401).json({
+            success: false,
+            reason: 'False credentials'
+        });
+    }
 
     res.status(200).json({
-        success: true,
-        data: user
+        success: true
     });
 };
