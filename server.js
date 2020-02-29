@@ -2,9 +2,11 @@ const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const colors = require('colors');
+const morgan = require('morgan');
 
 //route files
 const auth = require('./routes/auth');
+const castVote = require('./routes/castVote');
 
 //Load env variables
 dotenv.config({ path: './config/config.env' });
@@ -17,8 +19,12 @@ const app = express();
 //Body parser
 app.use(express.json());
 
+// Dev logging middleware
+app.use(morgan('dev'));
+
 //Mount routes
 app.use('/api/auth', auth);
+app.use('/api/vote', castVote);
 
 //Access env variable
 const PORT = process.env.PORT || 5000;
