@@ -4,7 +4,7 @@ const User = require('../models/auth');
 // @route       POST api/auth/register
 // @access      public
 exports.registerUser = async(req, res, next) => {
-    const { name, mobileNo, aadharNo, password } = req.body;
+    const { name, mobileNo, aadharNo, password, address } = req.body;
 
     const existingUser = await User.findOne({ aadharNo });
 
@@ -19,7 +19,8 @@ exports.registerUser = async(req, res, next) => {
             name,
             mobileNo,
             aadharNo,
-            password
+            password,
+            address
         });
         res.status(200).json({
             success: true,
