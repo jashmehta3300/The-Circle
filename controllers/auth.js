@@ -6,11 +6,14 @@ const User = require('../models/auth');
 exports.registerUser = async(req, res, next) => {
     const { name, mobileNo, aadharNo, password } = req.body;
 
-    const existingUser = await User.findOne({
-        aadharNo
-    });
+    const existingUser = await User.findOne({ aadharNo });
 
-    if (!existingUser) {
+    if (existingUser) {
+        res.status(401).json({
+            success: false,
+            reason: 'Aadhar Number is already registered'
+        });
+    } else {
         // Create user
         const user = await User.create({
             name,
@@ -21,11 +24,6 @@ exports.registerUser = async(req, res, next) => {
         res.status(200).json({
             success: true,
             data: user
-        });
-    } else {
-        res.status(401).json({
-            success: false,
-            reason: 'Aadhar Number is already registered'
         });
     }
 };
